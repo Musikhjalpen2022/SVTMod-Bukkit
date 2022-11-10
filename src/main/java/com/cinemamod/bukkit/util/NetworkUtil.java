@@ -147,6 +147,7 @@ public final class NetworkUtil {
         for (Screen screen : screens)
             screen.toBytes(buf);
         player.sendPluginMessage(plugin, CHANNEL_SCREENS, buf.array());
+        System.out.println("Sending screens to " + player.getName());
     }
 
     public static void sendLoadScreenPacket(JavaPlugin plugin, Player player, Screen screen, Video video) {
@@ -156,6 +157,8 @@ public final class NetworkUtil {
         buf.writeInt(screen.getZ());
         video.toBytes(buf);
         player.sendPluginMessage(plugin, CHANNEL_LOAD_SCREEN, buf.array());
+        String videoName = video.getVideoInfo() == null ? "NONE" : video.getVideoInfo().getTitle();
+        System.out.println("Sending video '" + videoName + "' to " + player.getName());
     }
 
     public static void sendUnloadScreenPacket(JavaPlugin plugin, Player player, Screen screen) {

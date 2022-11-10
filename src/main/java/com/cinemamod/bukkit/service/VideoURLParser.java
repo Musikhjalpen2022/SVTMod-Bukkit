@@ -40,6 +40,12 @@ public class VideoURLParser {
             return;
         }
 
+        String SVTId = getSVTStreamId(url);
+        if (SVTId != null) {
+            infoFetcher = new SVTVideoInfoFetcher(SVTId);
+            return;
+        }
+
         if (url.endsWith(".mp4") || url.endsWith(".webm") || url.endsWith("m4v")) {
             infoFetcher = new FileVideoInfoFetcher(cinemaModPlugin, "cinemamod.request.file", url, player == null ? "server" : player.getName());
             return;
@@ -79,6 +85,16 @@ public class VideoURLParser {
             if (!usernameCandidate.contains("/")) {
                 return usernameCandidate.trim();
             }
+        }
+        return null;
+    }
+
+
+    private static String getSVTStreamId(String url) {
+        String[] parts = url.split("https://www.svtplay.se/");
+        if (parts.length > 1) {
+            String endUrl = parts[1];
+            return endUrl.trim();
         }
         return null;
     }

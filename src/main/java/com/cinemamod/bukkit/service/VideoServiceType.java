@@ -29,7 +29,23 @@ public enum VideoServiceType implements PacketByteBufSerializable<VideoServiceTy
             "th_volume(%d);",
             "th_video('%s');",
             "",
-            "%s");
+            "%s"),
+
+    SVT(
+            "https://www.svtplay.se/%s",
+            """
+                        player = document.getElementsByClassName("_video-player__video_qoxkq_1")[0];
+                        player.volume = %f;""",
+            """
+                    var player = document.getElementsByClassName("_video-player_qoxkq_1 _video-player--16-9_qoxkq_1")[0];
+                    element = document.getElementsByClassName("_video-player_qoxkq_1 _video-player--16-9_qoxkq_1")[0];
+                    element.parentNode.removeChild(element);
+                    document.body.appendChild(player);
+                    element = document.getElementById("__next");
+                    element.parentNode.removeChild(element)""",
+            "",
+            "https://www.svtplay.se/%s"
+    );
 
     private String serviceUrl;
     private String setVolumeJs;
