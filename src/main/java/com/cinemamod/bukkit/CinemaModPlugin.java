@@ -13,6 +13,7 @@ import com.cinemamod.bukkit.storage.sql.MySQLVideoStorage;
 import com.cinemamod.bukkit.storage.sql.SQLiteVideoStorage;
 import com.cinemamod.bukkit.task.PlayerListUpdateTask;
 import com.cinemamod.bukkit.theater.TheaterManager;
+import com.cinemamod.bukkit.util.JoinSetUpHandler;
 import com.cinemamod.bukkit.util.NetworkUtil;
 import com.cinemamod.bukkit.util.ProtocolLibUtil;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,6 +28,10 @@ public class CinemaModPlugin extends JavaPlugin {
     private TheaterManager theaterManager;
     private VideoStorage videoStorage;
     private PlayerDataManager playerDataManager;
+
+    private JoinSetUpHandler joinSetUpHandler;
+
+    public JoinSetUpHandler getJoinSetUpHandler() { return joinSetUpHandler; }
 
     public CinemaModConfig getCinemaModConfig() {
         return cinemaModConfig;
@@ -47,6 +52,8 @@ public class CinemaModPlugin extends JavaPlugin {
     @Override
     public void onEnable() {
         saveDefaultConfig();
+
+        joinSetUpHandler = new JoinSetUpHandler();
 
         cinemaModConfig = new CinemaModConfig();
         cinemaModConfig.youtubeDataApiKey = getConfig().getString("youtube-data-api-key");

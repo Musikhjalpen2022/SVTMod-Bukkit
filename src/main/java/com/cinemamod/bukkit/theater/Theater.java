@@ -2,6 +2,7 @@ package com.cinemamod.bukkit.theater;
 
 import com.cinemamod.bukkit.CinemaModPlugin;
 import com.cinemamod.bukkit.event.*;
+import com.cinemamod.bukkit.listener.PlayerJoinQuitListener;
 import com.cinemamod.bukkit.storage.VideoInfo;
 import com.cinemamod.bukkit.theater.screen.PreviewScreen;
 import com.cinemamod.bukkit.theater.screen.Screen;
@@ -169,7 +170,13 @@ public abstract class Theater {
         Set<Player> newViewers = new HashSet<>();
 
         for (ProtectedRegion region : regions) {
-            newViewers.addAll(WorldGuardUtil.getPlayersInRegion(region));
+            for (Player player : WorldGuardUtil.getPlayersInRegion(region)) {
+                if (cinemaModPlugin.getJoinSetUpHandler().hasScreen(player.getUniqueId())) {
+                    newViewers.add(player);
+                } else {
+                    PlayerJoinQuitListener.handleJoin(cinemaModPlugin, player);
+                }
+            }
         }
 
         viewers = newViewers;
@@ -285,7 +292,7 @@ public abstract class Theater {
 
         updateViewers();
         updateVoteSkips();
-
+        /*
         // Update boss bars
         if (isPlaying()) {
             if (titleBossBar == null) {
@@ -320,6 +327,7 @@ public abstract class Theater {
             TheaterStartVideoEvent event = new TheaterStartVideoEvent(this);
             cinemaModPlugin.getServer().getPluginManager().callEvent(event);
         }
+         */
     }
 
     public void sendUpdatePreviewScreensPacket(Player player) {

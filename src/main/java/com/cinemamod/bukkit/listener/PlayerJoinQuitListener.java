@@ -23,31 +23,32 @@ public class PlayerJoinQuitListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
+
         Player player = event.getPlayer();
+        cinemaModPlugin.getPlayerDataManager().getData(player.getUniqueId());
+        cinemaModPlugin.getJoinSetUpHandler().onPlayerJoin(player.getUniqueId());
 
-        // Run 3 seconds after login
-        cinemaModPlugin.getServer().getScheduler().runTaskLater(cinemaModPlugin, () -> {
-            if (!player.isOnline()) return;
+    }
 
-            cinemaModPlugin.getPlayerDataManager().getData(player.getUniqueId());
+    public static void handleJoin(CinemaModPlugin cinemaModPlugin, Player player) {
 
-            NetworkUtil.sendRegisterServicesPacket(cinemaModPlugin, player);
+        NetworkUtil.sendRegisterServicesPacket(cinemaModPlugin, player);
 
-            List<Screen> screens = cinemaModPlugin.getTheaterManager().getTheaters()
-                    .stream()
-                    .map(Theater::getScreen)
-                    .collect(Collectors.toList());
+        List<Screen> screens = cinemaModPlugin.getTheaterManager().getTheaters()
+                .stream()
+                .map(Theater::getScreen)
+                .collect(Collectors.toList());
 
-            NetworkUtil.sendScreensPacket(cinemaModPlugin, player, screens);
+        NetworkUtil.sendScreensPacket(cinemaModPlugin, player, screens);
 
-            cinemaModPlugin.getTheaterManager().getTheaters().forEach(t -> t.sendUpdatePreviewScreensPacket(player));
-        }, 20L * 3);
+        cinemaModPlugin.getTheaterManager().getTheaters().forEach(t -> t.sendUpdatePreviewScreensPacket(player));
     }
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         cinemaModPlugin.getPlayerDataManager().unload(player.getUniqueId());
+        cinemaModPlugin.getJoinSetUpHandler().onPlayerQuit(player.getUniqueId());
     }
 
 }

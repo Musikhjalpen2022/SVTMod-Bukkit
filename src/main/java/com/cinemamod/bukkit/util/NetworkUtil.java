@@ -2,6 +2,7 @@ package com.cinemamod.bukkit.util;
 
 import com.cinemamod.bukkit.CinemaModPlugin;
 import com.cinemamod.bukkit.buffer.PacketByteBufReimpl;
+import com.cinemamod.bukkit.listener.PlayerJoinQuitListener;
 import com.cinemamod.bukkit.player.PlayerData;
 import com.cinemamod.bukkit.service.VideoServiceType;
 import com.cinemamod.bukkit.storage.VideoInfo;
@@ -17,10 +18,12 @@ import io.netty.buffer.Unpooled;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.Messenger;
+import org.bukkit.plugin.messaging.PluginMessageRecipient;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class NetworkUtil {
 
@@ -37,6 +40,7 @@ public final class NetworkUtil {
     private static final String CHANNEL_VIDEO_LIST_PLAYLIST_SPLIT = "cinemamod:video_list_playlist_split";
     private static final String CHANNEL_VIDEO_QUEUE_STATE = "cinemamod:video_queue_state";
     /* INCOMING */
+    private static final String CHANNEL_SCREEN_RECEIVED = "cinemamod:screen_received";
     private static final String CHANNEL_VIDEO_REQUEST = "cinemamod:video_request";
     private static final String CHANNEL_VIDEO_HISTORY_REMOVE = "cinemamod:video_history_remove";
     private static final String CHANNEL_VIDEO_PLAYLIST_CREATE = "cinemamod:video_playlist_create";
@@ -61,6 +65,10 @@ public final class NetworkUtil {
         m.registerOutgoingPluginChannel(cinemaModPlugin, CHANNEL_VIDEO_LIST_PLAYLIST_SPLIT);
         m.registerOutgoingPluginChannel(cinemaModPlugin, CHANNEL_VIDEO_QUEUE_STATE);
         /* INCOMING */
+        m.registerIncomingPluginChannel(cinemaModPlugin, CHANNEL_SCREEN_RECEIVED, (s, player, bytes) -> {
+            System.out.println(player.getName() + "has received screens");
+            cinemaModPlugin.getJoinSetUpHandler().onPlayerReceivedScreen(player.getUniqueId());
+        });
         m.registerIncomingPluginChannel(cinemaModPlugin, CHANNEL_VIDEO_REQUEST, (s, player, bytes) -> {
             PacketByteBufReimpl buf = new PacketByteBufReimpl(Unpooled.wrappedBuffer(bytes));
             VideoInfo videoInfo = new VideoInfo().fromBytes(buf);
@@ -129,7 +137,7 @@ public final class NetworkUtil {
         m.registerIncomingPluginChannel(cinemaModPlugin, CHANNEL_SHOW_VIDEO_TIMELINE, (s, player, bytes) -> {
             Theater theater = cinemaModPlugin.getTheaterManager().getCurrentTheater(player);
             if (theater == null || theater instanceof StaticTheater) return;
-            theater.showBossBars(cinemaModPlugin, player);
+            //theater.showBossBars(cinemaModPlugin, player);
         });
     }
 
@@ -147,7 +155,7 @@ public final class NetworkUtil {
         for (Screen screen : screens)
             screen.toBytes(buf);
         player.sendPluginMessage(plugin, CHANNEL_SCREENS, buf.array());
-        System.out.println("Sending screens to " + player.getName());
+        System.out.println("Sending " + screens.size() + " screens to " + player.getName());
     }
 
     public static void sendLoadScreenPacket(JavaPlugin plugin, Player player, Screen screen, Video video) {
