@@ -2,25 +2,35 @@ package com.cinemamod.bukkit.util;
 
 import com.cinemamod.bukkit.CinemaModPlugin;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 public class JoinSetUpHandler {
 
-    private final Set<UUID> playersMissingScreens;
+    private final static int TIMEOUT = 30;
+
+    private final Map<UUID, LocalDateTime> playersMissingScreens;
 
     public JoinSetUpHandler() {
-        playersMissingScreens = new HashSet<>();
+        playersMissingScreens = new HashMap<>();
     }
 
     public boolean hasScreen(UUID playerId) {
-        return !playersMissingScreens.contains(playerId);
+        if (playersMissingScreens.containsKey(playerId)) {
+            if (playersMissingScreens.get(playerId).until(LocalDateTime.now(), ChronoUnit.SECONDS) > TIMEOUT) {
+                playersMissingScreens.remove(playerId);
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void onPlayerJoin(UUID playerId) {
         System.out.println("This player needs screens: " + playerId.toString());
-        playersMissingScreens.add(playerId);
+        playersMissingScreens.put(playerId, LocalDateTime.now());
     }
 
     public void onPlayerQuit(UUID playerId) {

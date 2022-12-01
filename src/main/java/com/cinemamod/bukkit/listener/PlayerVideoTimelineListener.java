@@ -16,20 +16,4 @@ public class PlayerVideoTimelineListener implements Listener {
         this.cinemaModPlugin = cinemaModPlugin;
     }
 
-    @EventHandler
-    public void onPlayerChangeItem(PlayerItemHeldEvent event) {
-        Player player = event.getPlayer();
-        Theater theater = cinemaModPlugin.getTheaterManager().getCurrentTheater(player);
-
-        if (theater == null || theater instanceof StaticTheater) {
-            return;
-        }
-
-        if (!theater.isPlaying()) {
-            return;
-        }
-
-        theater.showBossBars(cinemaModPlugin, player);
-    }
-
 }
