@@ -10,15 +10,5 @@ commands:
     aliases: [ rq ]
   forceskip:
     description: Force skip a video
-  voteskip:
-    description: Vote skip a video
-  lockqueue:
-    description: Lock the video queue for your theater
   volume:
     description: Set the volume for videos
-  protect:
-    description: Purchase protection for your theater
-  playing:
-    description: Show information about what's playing
-  history:
-    description: Show your previously requested videos
