@@ -27,7 +27,7 @@ public class VideoURLParser {
         if (parsed) return;
 
         parsed = true;
-
+        /*
         String youtubeVideoId = getYouTubeVideoId(url);
         if (youtubeVideoId != null) {
             infoFetcher = new YouTubeVideoInfoFetcher(cinemaModPlugin, youtubeVideoId);
@@ -39,13 +39,13 @@ public class VideoURLParser {
             infoFetcher = new TwitchVideoInfoFetcher(twitchUser);
             return;
         }
-
+        */
         String SVTId = getSVTStreamId(url);
         if (SVTId != null) {
             infoFetcher = new SVTVideoInfoFetcher(SVTId);
             return;
         }
-
+        /*
         if (url.endsWith(".mp4") || url.endsWith(".webm") || url.endsWith("m4v")) {
             infoFetcher = new FileVideoInfoFetcher(cinemaModPlugin, "cinemamod.request.file", url, player == null ? "server" : player.getName());
             return;
@@ -55,6 +55,7 @@ public class VideoURLParser {
             infoFetcher = new HLSVideoInfoFetcher(url, player == null ? "server" : player.getName());
             return;
         }
+        */
     }
 
     public VideoInfoFetcher getInfoFetcher() {
