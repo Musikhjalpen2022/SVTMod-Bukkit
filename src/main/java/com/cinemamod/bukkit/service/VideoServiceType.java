@@ -31,18 +31,25 @@ public enum VideoServiceType implements PacketByteBufSerializable<VideoServiceTy
             "",
             "%s"),
 
+    // document.querySelectorAll('[data-rt="top-area-play-button"]')[0]?.click();
     SVT(
             "https://www.svtplay.se/%s",
             """
                         player = document.getElementsByClassName("_video-player__video_qoxkq_1")[0];
                         player.volume = %f;""",
             """
+                    document.querySelectorAll('[data-rt="top-area-play-button"]')[0]?.click();
+                    player = document.getElementsByClassName("_video-player__video_qoxkq_1")[0];
+                    player.requestFullscreen();
+                    player.play();
+                    navigator.mediaSession.setActionHandler('pause', function() {});"""
+            /*"""
                     var player = document.getElementsByClassName("_video-player_qoxkq_1 _video-player--16-9_qoxkq_1")[0];
                     element = document.getElementsByClassName("_video-player_qoxkq_1 _video-player--16-9_qoxkq_1")[0];
                     element.parentNode.removeChild(element);
                     document.body.appendChild(player);
                     element = document.getElementById("__next");
-                    element.parentNode.removeChild(element)""",
+                    element.parentNode.removeChild(element)"""*/,
             "",
             "https://www.svtplay.se/%s"
     );
