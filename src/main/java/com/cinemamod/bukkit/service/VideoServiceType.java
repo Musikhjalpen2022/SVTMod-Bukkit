@@ -38,18 +38,23 @@ public enum VideoServiceType implements PacketByteBufSerializable<VideoServiceTy
                         player = document.getElementsByClassName("_video-player__video_qoxkq_1")[0];
                         player.volume = %f;""",
             """
-                    document.querySelectorAll('[data-rt="top-area-play-button"]')[0]?.click();
-                    player = document.getElementsByClassName("_video-player__video_qoxkq_1")[0];
-                    player.requestFullscreen();
-                    player.play();
-                    navigator.mediaSession.setActionHandler('pause', function() {});"""
+                    btn = document.querySelectorAll('[data-rt="top-area-play-button"]')[0];
+                    if (btn) {
+                        btn.click();
+                        document.getElementsByClassName("_video-player__video_qoxkq_1")[0]?.setAttribute("loop", "loop");
+                    } else {
+                        document.querySelectorAll('[data-rt="video-player-splash-play"]')[0]?.click();
+                        var player = document.getElementsByClassName("_video-player_qoxkq_1 _video-player--16-9_qoxkq_1")[0];
+                        element = document.getElementsByClassName("_video-player_qoxkq_1 _video-player--16-9_qoxkq_1")[0];
+                        element.parentNode.removeChild(element);
+                        document.body.appendChild(player);
+                        element = document.getElementById("__next");
+                        element.parentNode.removeChild(element);
+                    }
+                    navigator.mediaSession.setActionHandler('pause', function() {});
+                    document.getElementsByClassName("_video-player__video_qoxkq_1")[0]?.play();"""
             /*"""
-                    var player = document.getElementsByClassName("_video-player_qoxkq_1 _video-player--16-9_qoxkq_1")[0];
-                    element = document.getElementsByClassName("_video-player_qoxkq_1 _video-player--16-9_qoxkq_1")[0];
-                    element.parentNode.removeChild(element);
-                    document.body.appendChild(player);
-                    element = document.getElementById("__next");
-                    element.parentNode.removeChild(element)"""*/,
+                    """*/,
             "",
             "https://www.svtplay.se/%s"
     );

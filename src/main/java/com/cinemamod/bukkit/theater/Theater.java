@@ -113,9 +113,9 @@ public abstract class Theater {
     public void forceSkip() {
         playing = null;
         voteSkips.clear();
-        titleBossBar.removeAll();
+        //titleBossBar.removeAll();
         titleBossBar = null;
-        timelineBossBar.removeAll();
+        //timelineBossBar.removeAll();
         timelineBossBar = null;
 
         for (Player player : cinemaModPlugin.getServer().getOnlinePlayers()) {
